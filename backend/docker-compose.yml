@@ -1,9 +1,9 @@
 services:
-  app:
+  php:
     build:
       context: .
       dockerfile: docker/php/Dockerfile
-    container_name: ${PROJECT_NAME}_app
+    container_name: ${PROJECT_NAME}_backend
     volumes:
       - .:/var/www/html
       - ./docker/php/apache.conf:/etc/apache2/sites-enabled/000-default.conf
@@ -12,7 +12,7 @@ services:
     depends_on:
       - mysql
     networks:
-      - app_networks
+      - ${PROJECT_NAME}_networks
     command: >
       /bin/sh -c "cd .. &&
                   composer config name ${COMPOSER_PROJECT_NAME} &&
@@ -20,7 +20,7 @@ services:
                   apache2-foreground" 
   mysql:
     image: mysql:8.0
-    container_name: ${PROJECT_NAME}_mysql
+    container_name: ${PROJECT_NAME}_database
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
@@ -33,27 +33,11 @@ services:
       - db_data:/var/lib/mysql
     networks:
       - app_networks
-  # composer:
-  #   image: composer:2
-  #   container_name: composer
-  #   working_dir: /var/www/html
-  #   user: "1000:1000"
-  #   volumes:
-  #     - .:/var/www/html
-  #   entrypoint: /bin/bash
-  #   command:
-  #     - -c
-  #     - |
-  #       if [ ! -f artisan ]; then
-  #         composer install && \
-  #         composer config name ${COMPOSER_PROJECT_NAME} && \
-  #         composer config type ${COMPOSER_TYPE}
-  #       fi  
 
 volumes:
   db_data:
 
 networks:
   app_networks:
-    name: backend_network
+    name: ${PROJECT_NAME}_network
     driver: bridge
