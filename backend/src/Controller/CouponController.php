@@ -2,25 +2,27 @@
 
 namespace App\Controller;
 
-use App\Repository\CouponRepository;
+use App\Service\CouponService;
 
 class CouponController
 {
-    private CouponRepository $repository;
+    private CouponService $service;
 
     public function __construct()
     {
-        $this->repository = new CouponRepository();
+        $this->service = new CouponService();
     }
 
-    public function index(): array
+    public function index(): void
     {
-        return $this->repository->getAll();
+        xdebug_break();
+        $coupons = $this->service->getAll();
+        echo json_encode($coupons);
     }
 
-    public function store(array $data): array
+    public function store(array $data): void
     {
-        $id = $this->repository->create($data);
-        return ['id' => $id];
+        $result = $this->service->create($data);
+        echo json_encode($result);
     }
 }

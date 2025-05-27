@@ -4,15 +4,15 @@ namespace App\Controller;
 
 use App\Helper\Mailer;
 use App\Helper\ViaCepHelper;
-use App\Repository\OrderRepository;
+use App\Service\OrderService;
 
 class OrderController
 {
-    private OrderRepository $repository;
+    private OrderService $repository;
 
     public function __construct()
     {
-        $this->repository = new OrderRepository();
+        $this->service = new OrderService();
     }
 
     public function store(array $data): array
@@ -27,7 +27,7 @@ class OrderController
             'items' => json_encode($data['items']),
         ];
 
-        $id = $this->repository->create($orderData);
+        $id = $this->service->create($orderData);
 
         Mailer::send(
             $data['email'],

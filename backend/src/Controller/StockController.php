@@ -2,31 +2,32 @@
 
 namespace App\Controller;
 
-use App\Repository\StockRepository;
+use App\Service\StockService;
 
 class StockController
 {
-    private StockRepository $repository;
+    private StockService $service;
 
     public function __construct()
     {
-        $this->repository = new StockRepository();
+        $this->service = new StockService();
     }
 
-    public function index(): array
+    public function index(): void
     {
-        return $this->repository->getAll();
+        $stock = $this->service->getAll();
+        echo json_encode($stock);
     }
 
-    public function store(array $data): array
+    public function store(array $data): void
     {
-        $id = $this->repository->create($data);
-        return ['id' => $id];
+        $stock = $this->service->create($data);
+        echo json_encode($stock);
     }
 
     public function update(array $data): array
     {
-        $success = $this->repository->update($data);
+        $success = $this->service->update($data);
         return ['success' => $success];
     }
 }
