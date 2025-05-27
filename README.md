@@ -2,7 +2,7 @@
 
 ## Overview
 
-This project was developed and tested only in the Linux environment.
+This project was developed and tested only in the Linux environment.   
 The project is a full-stack application with:
 
 - Backend: PHP 8.3 API.
@@ -17,8 +17,6 @@ The project is a full-stack application with:
 - Git
 - Docker Engine (version 20.x or higher)
 - Docker Compose (version 1.29.x or higher)
-- Node.js (v18+ recommended) [Only needed if you want to run frontend locally without Docker]
-- NPM (comes with Node.js) [Same as above]
 
 ---
 
@@ -179,14 +177,65 @@ This will start backend, frontend, and MySQL containers on a shared Docker netwo
 
 ## Notes
 
-- Shipping rules are applied based on order subtotal:
-  - Subtotal between R$52.00 and R$166.59 → Shipping R$15.00
-  - Subtotal above R$200.00 → Free shipping
-  - Other values → Shipping R$20.00
-- CEP validation is done using https://viacep.com.br API.
-- Coupons have minimum subtotal requirements and expiration dates.
-- On order finalization, an email is sent to the customer with order details.
-- The webhook endpoint updates or cancels orders based on status updates.
+### How to Enable Xdebug on the Backend with VSCode
+Requirements
+
+Make sure you have the PHP Debug extension installed:
+https://marketplace.visualstudio.com/items?itemName=xdebug.php-debug
+1. Find the Host IP in the Docker Network
+
+Run the following command on your host machine (outside the container):
+
+```bash
+ip -4 addr show docker0 | grep -Po 'inet \K[\d.]+'
+```
+This will usually return something like:
+```bash
+172.17.0.1
+```
+2. Test if the Container Can Reach This IP
+
+Access the container shell:
+```bash
+docker exec -it montink_backend bash
+```
+Install ping and test the IP from step 1:
+```bash
+apt update && apt install iputils-ping -y && ping 172.17.0.1
+```
+If you get a response, this is the correct IP to use.
+3. Set xdebug.client_host in Your php.ini (or equivalent)
+
+Inside the container, update the Xdebug configuration:
+```bash
+echo "xdebug.client_host=172.17.0.1" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+```
+4. Increase Timeout Limit
+
+Create a new .ini file:
+```bash
+echo "max_execution_time=6000" > /usr/local/etc/php/conf.d/99-custom-timeout.ini
+```
+Or append to an existing file:
+```bash
+echo "max_execution_time=6000" >> /usr/local/etc/php/conf.d/docker-php.ini
+```
+Verify the configuration:
+```bash
+php --ini
+```
+Or check via /phpinfo.
+5. Restart the Container
+
+Restart the container (or restart Apache inside the container) to apply the changes.
+6. Configure Path Mappings in .vscode/launch.json
+
+In the root of your project, update your .vscode/launch.json to include the correct absolute path:
+```bash
+"pathMappings": {
+  "/var/www/html": "/home/will/Documentos/projetos/montink-dev-backend/backend"
+}
+```
 
 ---
 
