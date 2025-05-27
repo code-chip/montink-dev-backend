@@ -49,6 +49,10 @@ class Router
             case 'POST /webhook':
                 (new WebhookController())->receive($body);
                 break;
+            case 'GET /phpinfo':
+                header('Content-Type: text/html');
+                phpinfo();
+                break;    
             default:
                 http_response_code(404);
                 echo json_encode(['error' => 'Route not found']);
