@@ -1,0 +1,74 @@
+import { reactive, computed } from 'vue'
+import axios from 'axios'
+
+const state = reactive({
+  items: [], // { productId, variation, quantity, price }
+  coupon: null
+})
+
+export function useCart() {
+  function addItem(product, variation, quantity = 1) {
+    const price = parseFloat(product.price) // Corrige erro de tipo
+    console.log(product)
+    const existing = state.items.find(
+      i => i.productId === product.id && i.variation === variation
+    )
+
+    if (existing) {
+      existing.quantity += quantity
+    } else {
+      state.items.push({
+        productId: product.id,
+        variation,
+        quantity,
+        price
+      })
+    }
+  }
+
+  function removeItem(index) {
+    state.items.splice(index, 1)
+  }
+
+  function clearCart() {
+    state.items = []
+    state.coupon = null
+  }
+
+  const subtotal = computed(() =>
+    state.items.reduce((sum, i) => sum + i.price * i.quantity, 0)
+  )
+
+  const shipping = computed(() => {
+    if (subtotal.value >= 200) return 0
+    if (subtotal.value >= 52 && subtotal.value <= 166.59) return 15
+    return 20
+  })
+
+  const total = computed(() => subtotal.value + shipping.value)
+
+  async function applyCoupon(code) {
+    try {
+      const res = await axios.get('http://localhost:8000/coupons')
+      const found = res.data.find(c => c.code === code && new Date(c.expires_at) >= new Date())
+      if (found && subtotal.value >= found.min_value) {
+        state.coupon = found
+        return { success: true, discount: found.discount }
+      }
+      return { success: false, message: 'Coupon invalid or not applicable' }
+    } catch {
+      return { success: false, message: 'Error validating coupon' }
+    }
+  }
+
+  return {
+    state,
+    addItem,
+    removeItem,
+    clearCart,
+    subtotal,
+    shipping,
+    total,
+    applyCoupon
+  }
+}
