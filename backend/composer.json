@@ -1,0 +1,14 @@
+{
+    "name": "code-chip/montink",
+    "description": "PHP backend for product order system",
+    "require": {
+        "php": "^8.3",
+        "vlucas/phpdotenv": "^5.6"
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\": "src/"
+        }
+    },
+    "type": "project"
+}
