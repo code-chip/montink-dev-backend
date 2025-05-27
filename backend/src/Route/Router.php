@@ -37,6 +37,9 @@ class Router
             case 'PUT /stocks':
                 (new StockController())->update($body);
                 break;
+            case 'GET /orders':
+                (new OrderController())->index();
+                break;    
             case 'POST /orders':
                 (new OrderController())->store($body);
                 break;
@@ -47,7 +50,7 @@ class Router
                 (new CouponController())->index();
                 break;
             case 'POST /webhook':
-                (new WebhookController())->receive($body);
+                (new WebhookController())->handle($body);
                 break;
             case 'GET /phpinfo':
                 header('Content-Type: text/html');
