@@ -15,7 +15,6 @@ class CouponController
 
     public function index(): void
     {
-        xdebug_break();
         $coupons = $this->service->getAll();
         echo json_encode($coupons);
     }
