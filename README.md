@@ -2,7 +2,8 @@
 
 ## Overview
 
-This project is a full-stack application with:
+This project was developed and tested only in the Linux environment.
+The project is a full-stack application with:
 
 - Backend: PHP 8.3 API.
 - Database: MySQL 8.0, with tables for orders, products, coupons, and stocks.
@@ -21,13 +22,27 @@ This project is a full-stack application with:
 
 ---
 
-## Backend Setup
+## Installation with a single command
+
+```bash
+git clone git@github.com:code-chip/montink-dev-backend.git montink-codechip &&
+cd montink-codechip &&
+cd backend &&
+docker-compose build &&
+docker-compose up -d &&
+cd .. &&
+cd frontend &&
+docker-compose build &&
+docker-compose up -d &&
+```
+
+## Step by step installation: Backend Setup
 
 ### 1. Clone the repository
 
 ```bash
-git git@github.com:code-chip/montink-dev-backend.git montink-codechip
-&& cd montink-codechip && backend
+git clone git@github.com:code-chip/montink-dev-backend.git montink-codechip
+&& cd montink-codechip && cd backend
 ```
 
 ### 2. Configure environment
