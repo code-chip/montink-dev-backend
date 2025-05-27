@@ -3,7 +3,7 @@ require_once __DIR__ . '/../src/Database/Connection.php';
 
 use App\Database\Connection;
 
-$pdo = (new Connection())->getConnection();
+$pdo = Connection::getInstance();
 
 $queries = [
     "CREATE TABLE IF NOT EXISTS products (
