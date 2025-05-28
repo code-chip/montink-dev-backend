@@ -6,7 +6,7 @@ This project was developed and tested only in the Linux environment.
 The project is a full-stack application with:
 
 - Backend: PHP 8.3 API.
-- Database: MySQL 8.0, with tables for orders, products, coupons, and stocks.
+- Database: MySQL 8.0, with tables for orders, products, order_produtcs, coupons, and stocks.
 - Frontend: Vue.js SPA that communicates with backend API.
 - Docker: Containers for backend, frontend, and database, with networking for inter-container communication.
 
@@ -20,18 +20,22 @@ The project is a full-stack application with:
 
 ---
 
-## Installation with a single command
+## Installation and execution with a single command
 
 ```bash
-git clone git@github.com:code-chip/montink-dev-backend.git montink-codechip &&
-cd montink-codechip &&
-cd backend &&
-docker-compose build &&
-docker-compose up -d &&
-cd .. &&
-cd frontend &&
-docker-compose build &&
-docker-compose up -d &&
+git clone git@github.com:code-chip/montink-dev-backend.git montink-codechip && \
+cd montink-codechip && \
+docker-compose -f backend/docker-compose.yml build && \
+docker-compose -f backend/docker-compose.yml up -d && \
+docker-compose -f frontend/docker-compose.yml build && \
+docker-compose -f frontend/docker-compose.yml up -d && \
+echo "⏳ Waiting for the backend to start..." && \
+until [ -f backend/vendor/autoload.php ]; do
+  echo "⏳ Waiting for autoload to be generated..."
+  sleep 2
+done && \
+echo "✅ Backend ready, executing PHP commands..." && \
+docker-compose -f backend/docker-compose.yml exec -T php sh -c "cd .. && php migrations/create_tables.php && php seeders/seed_data.php"
 ```
 
 ## Step by step installation: Backend Setup
