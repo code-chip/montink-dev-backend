@@ -16,11 +16,22 @@ class OrderService
         $this->repo = new OrderRepository();
     }
 
+    public function getAll(): array
+    {
+        return $this->repo->getAll();
+    }
+
     public function create(array $data): array
     {
-        $subtotal = array_sum(array_column($data['items'], 'price'));
+        $itemsArray = json_decode($data['products'], true);
 
-        // Frete
+        if ($itemsArray === null) {
+            die("Erro ao decodificar 'products'");
+        }
+
+        $prices = array_column($itemsArray, 'price');
+        $subtotal = array_sum($prices);
+
         $shipping = 20;
         if ($subtotal >= 52 && $subtotal <= 166.59) {
             $shipping = 15;
@@ -28,7 +39,6 @@ class OrderService
             $shipping = 0;
         }
 
-        // Cupom
         if (!empty($data['coupon'])) {
             $couponRepo = new CouponRepository();
             $coupon = $couponRepo->getByCode($data['coupon']);
@@ -40,16 +50,18 @@ class OrderService
         $total = $subtotal + $shipping;
 
         // Endereço via CEP
-        $cepData = ViaCepHelper::fetch($data['cep']);
+        //$cepData = ViaCepHelper::fetch($data['cep']);
 
         $orderId = $this->repo->create([
-            'total' => $total,
             'status' => 'pending',
-            'address' => json_encode($cepData),
-            'items' => json_encode($data['items']),
+            'total' => $total,
+            'shipping' => $data['shipping'],
+            'address' => $data['address'],
+            'products' => $itemsArray,
+            //'products' => json_encode($data['products']),
         ]);
 
-        Mailer::send('client@example.com', 'Order Confirmation', "Your order ID is #$orderId");
+        //Mailer::send('client@example.com', 'Order Confirmation', "Your order ID is #$orderId");
 
         return ['order_id' => $orderId, 'total' => $total];
     }
