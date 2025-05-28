@@ -99,4 +99,19 @@ class OrderRepository
         return $orderId;
     }
 
+    public function delete(int $id): void
+    {
+        $stmt = $this->db->prepare("DELETE FROM orders WHERE id = :id");
+        $stmt->execute([':id' => $id]);
+    }
+
+    public function updateStatus(int $id, string $status): void
+    {
+        $stmt = $this->db->prepare("UPDATE orders SET status = :status WHERE id = :id");
+        $stmt->execute([
+            ':id' => $id,
+            ':status' => $status,
+        ]);
+    }
+
 }
