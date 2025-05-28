@@ -9,7 +9,7 @@ const state = reactive({
 export function useCart() {
   function addItem(product, variation, quantity = 1) {
     const price = parseFloat(product.price) // Corrige erro de tipo
-    console.log(product)
+
     const existing = state.items.find(
       i => i.productId === product.id && i.variation === variation
     )
@@ -48,20 +48,35 @@ export function useCart() {
   })
 
   const total = computed(() => subtotal.value + shipping.value)
+  const apiUrl = import.meta.env.VITE_API_URL
 
   async function applyCoupon(code) {
     try {
-      const res = await axios.get('http://localhost:8000/coupons')
-      const found = res.data.find(c => c.code === code && new Date(c.expires_at) >= new Date())
-      if (found && subtotal.value >= found.min_value) {
+      const res = await axios.get(`${apiUrl}/coupons`)
+  
+      const found = res.data.find(c => {
+        const expDate = new Date(c.expires_at)
+        const now = new Date()
+        const minValue = parseFloat(c.min_value)
+  
+        return (
+          c.code === code &&
+          expDate >= now &&
+          subtotal.value >= minValue
+        )
+      })
+  
+      if (found) {
         state.coupon = found
-        return { success: true, discount: found.discount }
+        return { success: true, discount: parseFloat(found.discount) }
       }
+  
       return { success: false, message: 'Coupon invalid or not applicable' }
-    } catch {
+    } catch (err) {
+      console.error('Coupon validation error:', err)
       return { success: false, message: 'Error validating coupon' }
     }
-  }
+  }  
 
   return {
     state,
