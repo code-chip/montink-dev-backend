@@ -78,7 +78,7 @@ class OrderRepository
         
         $orderId = (int)$this->db->lastInsertId();
 
-        // Insere produtos relacionados na tabela order_products
+        // Inserts related products into the order_products table
         $stmtProduct = $this->db->prepare("
             INSERT INTO order_products (order_id, product_id, quantity, unit_price)
             VALUES (:order_id, :product_id, :quantity, :unit_price)
@@ -93,35 +93,10 @@ class OrderRepository
             ]);
         }
 
-        // Confirma transação
+        // Confirm transaction
         $this->db->commit();
 
         return $orderId;
     }
 
-    public function create2(array $data): int
-    {
-        $stmt = $this->db->prepare("INSERT INTO orders (status, total, shipping, address) VALUES (:status, :total, :shipping, :address)");
-        $stmt->execute([
-            ':total' => $data['total'],
-            ':status' => $data['status'],
-            ':address' => $data['address'],
-        ]);
-        return (int)$this->db->lastInsertId();
-    }
-
-    public function delete(int $id): void
-    {
-        $stmt = $this->db->prepare("DELETE FROM orders WHERE id = :id");
-        $stmt->execute([':id' => $id]);
-    }
-
-    public function updateStatus(int $id, string $status): void
-    {
-        $stmt = $this->db->prepare("UPDATE orders SET status = :status WHERE id = :id");
-        $stmt->execute([
-            ':id' => $id,
-            ':status' => $status,
-        ]);
-    }
 }
