@@ -16,12 +16,14 @@ export function useCart() {
 
     if (existing) {
       existing.quantity += quantity
+      existing.subtotal = parseFloat((existing.price * existing.quantity).toFixed(2))
     } else {
       state.items.push({
-        productId: product.id,
+        id: product.id,
         variation,
         quantity,
-        price
+        price,
+        subtotal: parseFloat((price * quantity).toFixed(2))
       })
     }
   }

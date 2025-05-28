@@ -101,12 +101,14 @@ export default {
         alert('Please fill in the address')
         return
       }
-
+      
       const orderPayload = {
-        total: cart.total.value,
         status: 'pending',
+        total: cart.total.value,
         address: address.value,
-        items: JSON.stringify(cart.state.items)
+        cep: cep.value,
+        shipping: cart.shipping.value,
+        products: cart.state.items
       }
 
       try {
