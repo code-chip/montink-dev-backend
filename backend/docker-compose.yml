@@ -17,6 +17,7 @@ services:
       /bin/sh -c "cd .. &&
                   composer config name ${COMPOSER_PROJECT_NAME} &&
                   composer config type ${COMPOSER_TYPE} &&
+                  composer install &&
                   apache2-foreground" 
   mysql:
     image: mysql:8.0
