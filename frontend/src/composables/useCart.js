@@ -47,7 +47,18 @@ export function useCart() {
     return 20
   })
 
-  const total = computed(() => subtotal.value + shipping.value)
+  const total = computed(() => {
+    const rawTotal = subtotal.value + shipping.value
+  
+    if (state.coupon) {
+      const discount = parseFloat(state.coupon.discount)
+      return Math.max(rawTotal - discount, 0)
+    }
+  
+    return rawTotal
+  })
+  
+
   const apiUrl = import.meta.env.VITE_API_URL
 
   async function applyCoupon(code) {
