@@ -3,6 +3,9 @@ services:
     build:
       context: .
       dockerfile: docker/php/Dockerfile
+      args:
+        UID: ${MY_UID}
+        GID: ${GID}
     container_name: ${PROJECT_NAME}_backend
     volumes:
       - .:/var/www/html
