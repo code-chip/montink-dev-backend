@@ -34,6 +34,8 @@ $queries = [
     "CREATE TABLE IF NOT EXISTS orders (
         id INT AUTO_INCREMENT PRIMARY KEY,
         status VARCHAR(50) DEFAULT 'pending',
+        subtotal DECIMAL(10,2),
+        discount DECIMAL(10,2),
         total DECIMAL(10,2),
         shipping DECIMAL(10,2),
         customer_email VARCHAR(255),

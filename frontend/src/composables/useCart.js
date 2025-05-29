@@ -87,7 +87,11 @@ export function useCart() {
       console.error('Coupon validation error:', err)
       return { success: false, message: 'Error validating coupon' }
     }
-  }  
+  }
+  
+  const couponDiscount = computed(() => {
+    return state.coupon ? parseFloat(state.coupon.discount) : 0
+  })
 
   return {
     state,
@@ -97,6 +101,7 @@ export function useCart() {
     subtotal,
     shipping,
     total,
-    applyCoupon
+    applyCoupon,
+    couponDiscount
   }
 }

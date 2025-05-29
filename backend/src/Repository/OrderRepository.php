@@ -39,8 +39,10 @@ class OrderRepository
                 $orderProduct[$orderId] = [
                     'id' => $row['id'],
                     'status' => $row['status'],
-                    'total' => $row['total'],
+                    'subtotal' => $row['subtotal'],
+                    'discount' => $row['discount'],
                     'shipping' => $row['shipping'],
+                    'total' => $row['total'],
                     'customer_email' => $row['customer_email'],
                     'customer_address' => $row['customer_address'],
                     'created_at' => $row['created_at'],

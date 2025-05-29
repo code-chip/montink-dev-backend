@@ -104,6 +104,8 @@ export default {
       
       const orderPayload = {
         status: 'pending',
+        subtotal: cart.subtotal.value,
+        discount: cart.couponDiscount.value,
         total: cart.total.value,
         address: address.value,
         cep: cep.value,
@@ -119,8 +121,11 @@ export default {
         couponMessage.value = ''
         cep.value = ''
         address.value = ''
-      } catch {
-        alert('Failed to place order')
+      } catch (error) {
+          error.response?.data?.message ||
+          error.message ||
+          'Failed to place order'
+        alert('Failed to place order: ${message}')
       }
     }
 

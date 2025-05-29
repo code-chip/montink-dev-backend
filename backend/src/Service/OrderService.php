@@ -25,45 +25,20 @@ class OrderService
     {
         $itemsArray = json_decode($data['products'], true);
 
-        if ($itemsArray === null) {
-            die("Erro ao decodificar 'products'");
-        }
-
-        $prices = array_column($itemsArray, 'price');
-        $subtotal = array_sum($prices);
-
-        $shipping = 20;
-        if ($subtotal >= 52 && $subtotal <= 166.59) {
-            $shipping = 15;
-        } elseif ($subtotal > 200) {
-            $shipping = 0;
-        }
-
-        if (!empty($data['coupon'])) {
-            $couponRepo = new CouponRepository();
-            $coupon = $couponRepo->getByCode($data['coupon']);
-            if ($coupon && $coupon['min_value'] <= $subtotal && strtotime($coupon['expires_at']) > time()) {
-                $subtotal -= $coupon['discount'];
-            }
-        }
-
-        $total = $subtotal + $shipping;
-
         // Endereço via CEP
         //$cepData = ViaCepHelper::fetch($data['cep']);
 
         $orderId = $this->repo->create([
-            'status' => 'pending',
-            'total' => $total,
+            'status' => $data['status'],
+            'total' => $data['total'],
             'shipping' => $data['shipping'],
             'address' => $data['address'],
             'products' => $itemsArray,
-            //'products' => json_encode($data['products']),
         ]);
 
         //Mailer::send('client@example.com', 'Order Confirmation', "Your order ID is #$orderId");
 
-        return ['order_id' => $orderId, 'total' => $total];
+        return ['order_id' => $orderId, 'total' => $data['total']];
     }
 
     public function delete(int $id): void
