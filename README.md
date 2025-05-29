@@ -212,7 +212,7 @@ If you get a response, this is the correct IP to use.
 
 Inside the container, update the Xdebug configuration:
 ```bash
-echo "xdebug.client_host=172.17.0.1" >> /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
+echo "xdebug.client_host=172.17.0.1" >> /usr/local/etc/php/conf.d/xdebug.ini
 ```
 4. Increase Timeout Limit
 
