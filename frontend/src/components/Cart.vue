@@ -15,7 +15,7 @@
       </thead>
       <tbody>
         <tr v-for="(item, index) in cart.state.items" :key="index">
-          <td>{{ item.productId }}</td>
+          <td>{{ item.id }}</td>
           <td>{{ item.variation }}</td>
           <td>{{ item.quantity }}</td>
           <td>{{ parseFloat(item.price).toFixed(2) }}</td>

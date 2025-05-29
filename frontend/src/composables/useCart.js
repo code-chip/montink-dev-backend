@@ -11,7 +11,7 @@ export function useCart() {
     const price = parseFloat(product.price) // Corrige erro de tipo
 
     const existing = state.items.find(
-      i => i.productId === product.id && i.variation === variation
+      i => i.id === product.id && i.variation === variation
     )
 
     if (existing) {
