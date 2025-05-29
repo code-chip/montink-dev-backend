@@ -2,7 +2,6 @@ services:
   vuejs:
     image: node:18
     container_name: ${VITE_PROJECT_NAME}_frontend
-    user: "${MY_UID}:${GID}"
     working_dir: /vuejs
     volumes:
       - .:/vuejs
