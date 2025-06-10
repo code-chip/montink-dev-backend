@@ -1,0 +1,1 @@
+{"version":1,"defects":{"ProductTest::testGetCollectionProduct":7,"ProductTest::testCreateProduct":7},"times":{"ProductTest::testGetCollectionProduct":0.198,"ProductTest::testCreateProduct":2.669,"Tests\\Integration\\ProductTest::testGetCollectionProduct":0.321,"Tests\\Integration\\ProductTest::testCreateProduct":0.186}}
